@@ -24,8 +24,7 @@
 elements,appender elements, categories and an optional root
 element. -->
 
-<!ELEMENT log4j:configuration (renderer*, throwableRenderer?,
-                               appender*,plugin*, (category|logger)*,root?,
+<!ELEMENT log4j:configuration (renderer*, appender*,plugin*, (category|logger)*,root?,
                                (categoryFactory|loggerFactory)?)>
 
 <!-- The "threshold" attribute takes a level value below which -->
@@ -56,14 +55,6 @@ element. -->
   renderedClass  CDATA #REQUIRED
   renderingClass CDATA #REQUIRED
 >
-
-<!--  throwableRenderer allows the user to customize the conversion
-         of exceptions to a string representation.  -->
-<!ELEMENT throwableRenderer (param*)>
-<!ATTLIST throwableRenderer
-  class  CDATA #REQUIRED
->
-
 
 <!-- Appenders must have a name and a class. -->
 <!-- Appenders may contain an error handler, a layout, optional parameters -->
@@ -134,9 +125,8 @@ element. -->
 
 <!-- If no level element is specified, then the configurator MUST not -->
 <!-- touch the level of the named logger. -->
-<!ELEMENT logger (param*,level?,appender-ref*)>
+<!ELEMENT logger (level?,appender-ref*)>
 <!ATTLIST logger
-  class         CDATA   #IMPLIED
   name		CDATA	#REQUIRED
   additivity	(true|false) "true"  
 >
