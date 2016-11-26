@@ -31,7 +31,7 @@ public class Cleaner extends MVCPortlet {
  
 	public void cleanVersions(ActionRequest aReq, ActionResponse aRes) {
 		/** 
-		 * themeDisplay Objekt notwendig für userId und permissionChecker 
+		 * themeDisplay Objekt notwendig fÃ¼r userId und permissionChecker 
 		 */
 		ThemeDisplay themeDisplay = (ThemeDisplay)aReq.getAttribute(WebKeys.THEME_DISPLAY);
 
@@ -49,30 +49,30 @@ public class Cleaner extends MVCPortlet {
 
 			/** 
 			 * Permissionabfrage; auch wenn das Portlet nur im Control Panel einsehbar ist und sich in der category.hidden befindet, 
-			 * (siehe liferay-portlet.xml und liferay-display.xml), so darf nur ein Omniadmin oder companyadmin diese Funktion ausdführen
+			 * (siehe liferay-portlet.xml und liferay-display.xml), so darf nur ein Omniadmin oder companyadmin diese Funktion ausfÃ¼hren
 			 */
 			if(themeDisplay.getPermissionChecker().isOmniadmin()||themeDisplay.getPermissionChecker().isCompanyAdmin()) {
 				int i=0;
 				/**
-				 * Interation durch alle Files
+				 * Iteration durch alle Files
 				 */
 				for(DLFileEntry file:files) {
 					/**
-					 * Abfrage, ob Anzahl der Versionen vom aktuelklen File den voreingestellten Wert übersteigt; da kein Workflow für Dokumente
+					 * Abfrage, ob Anzahl der Versionen vom aktuellen File den voreingestellten Wert Ã¼bersteigt; da kein Workflow fÃ¼r Dokumente
 					 * hinterlegt sind, haben alle Files und Versions den Status Approved 
 					 */
 					if(file.getFileVersionsCount(WorkflowConstants.STATUS_APPROVED)>noRest) {
 						/**
-						 * Liste aller Versions für dieses File
+						 * Liste aller Versions fÃ¼r dieses File
 						 */
 						List<DLFileVersion> versions = DLFileVersionLocalServiceUtil.getFileVersions(file.getFileEntryId(), 0);
 						/**
-						 * Subliste nach Abzug von noRest Einträgen; versions hat am ersten Index standardmäßig dem aktuellsten Eintrag
+						 * Subliste nach Abzug von noRest EintrÃ¤gen; versions hat am ersten Index standardmÃ¤ÃŸig den aktuellsten Eintrag
 						 */
 						List<DLFileVersion> subVersions = versions.subList(noRest, file.getFileVersionsCount(WorkflowConstants.STATUS_APPROVED));
 						/**
-						 * Iteration durch subVersions, um überflüssige Versions zu löschen;
-						 * DLFileEntryLocalServiceUtill.deleteFileVersions() löscht entsprechende Versions aus DB, Filesystem und zugehörige Expandowerte
+						 * Iteration durch subVersions, um Ã¼berflÃ¼ssige Versions zu lÃ¶schen;
+						 * DLFileEntryLocalServiceUtill.deleteFileVersions() lÃ¶scht entsprechende Versions aus DB, Filesystem und zugehÃ¶rige Expandowerte
 						 */
 						for(DLFileVersion ver : subVersions) {
 							DLFileEntryLocalServiceUtil.deleteFileVersion(themeDisplay.getUserId(), file.getFileEntryId(), ver.getVersion());
