@@ -23,15 +23,17 @@ import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.logging.Logger;
+
+
 
 /**
  * Portlet implementation class Cleaner
  */
 public class Cleaner extends MVCPortlet {
 
-	private static Logger _log = LoggerFactory.getLogger(Cleaner.class);
+	private static Logger _log = Logger.getLogger(Cleaner.class.toString());
  
 	public void cleanVersions(ActionRequest aReq, ActionResponse aRes) {
 		/** 
@@ -78,7 +80,7 @@ public class Cleaner extends MVCPortlet {
 						 * Subliste nach Abzug von noRest Einträgen; versions hat am ersten Index standardmäßig dem aktuellsten Eintrag
 						 */
 						List<DLFileVersion> subVersions = versions.subList(noRest, file.getFileVersionsCount(WorkflowConstants.STATUS_APPROVED));
-						_log.info("Anzahl überflüssiger Versionen: " + subVersions.size());
+						_log.info("Anzahl ueberfluessiger Versionen: " + subVersions.size());
 
 						/**
 						 * FileLock setzen
@@ -90,8 +92,8 @@ public class Cleaner extends MVCPortlet {
 										null, false, DLFileEntryConstants.LOCK_EXPIRATION_TIME);
 							}
 						} catch (Exception e) {
-							_log.info("Fehler beim Setzen vom FileLock:");
-							_log.info(e.getMessage());
+							_log.severe("Fehler beim Setzen vom FileLock:");
+							_log.severe(e.getMessage());
 						}
 
 						/**
@@ -104,33 +106,33 @@ public class Cleaner extends MVCPortlet {
 							 * Lösche Expandos 
 							 */
 							try {
-								_log.info("==> Lösche FileVersion Expandos");
+								_log.info("==> Loesche FileVersion Expandos");
 								ExpandoValueLocalServiceUtil.deleteValues(DLFileVersion.class.getName(), ver.getFileVersionId());
 							} catch (Exception e) {
-								_log.info("Fehler beim Löschen von Expandos:");
-								_log.info(e.getMessage());
+								_log.severe("Fehler beim Loeschen von Expandos:");
+								_log.severe(e.getMessage());
 							}
 							
 							/** 
 							 * Bereinige Filesystem
 							 */
 							try {
-								_log.info("==> Lösche Einträge im Filesystem");
+								_log.info("==> Loesche Einträge im Filesystem");
 								DLStoreUtil.deleteFile(file.getCompanyId(), file.getDataRepositoryId(), file.getName(), ver.getVersion());
 							} catch (Exception e) {
-								_log.info("Fehler beim Löschen von Expandos:");
-								_log.info(e.getMessage());
+								_log.severe("Fehler beim Loeschen von Expandos:");
+								_log.severe(e.getMessage());
 							}
 							
 							/** 
 							 * Lösche Version
 							 */
 							try {
-								_log.info("==> Lösche Version");
+								_log.info("==> Loesche Version");
 								DLFileVersionLocalServiceUtil.deleteDLFileVersion(ver.getFileVersionId());
 							} catch (Exception e) {
-								_log.info("Fehler beim Löschen von Version:");
-								_log.info(e.getMessage());
+								_log.severe("Fehler beim Loeschen von Version:");
+								_log.severe(e.getMessage());
 							}
 							
 						}
@@ -142,8 +144,8 @@ public class Cleaner extends MVCPortlet {
 						try {
 							LockLocalServiceUtil.unlock(DLFileEntry.class.getName(), file.getFileEntryId());
 						} catch (Exception e) {
-							_log.info("Fehler beim Aufheben vom FileLock:");
-							_log.info(e.getMessage());
+							_log.severe("Fehler beim Aufheben vom FileLock:");
+							_log.severe(e.getMessage());
 						}
 					} else {
 						_log.info("Zu wenig Versionen, keine Bereinigung notwendig");
@@ -160,13 +162,13 @@ public class Cleaner extends MVCPortlet {
 			}
 			sendRedirect(aReq, aRes);
 		} catch (SystemException e) {
-			_log.error("=======================================");
-			_log.error("SystemException im Cleaner");
-			_log.error(e.getStackTrace().toString());
+			_log.severe("=======================================");
+			_log.severe("SystemException im Cleaner");
+			_log.severe(e.getStackTrace().toString());
 		} catch (IOException e) {
-			_log.error("=======================================");
-			_log.error("IOException bei sendRedirect im Cleaner");
-			_log.error(e.getStackTrace().toString());
+			_log.severe("=======================================");
+			_log.severe("IOException bei sendRedirect im Cleaner");
+			_log.severe(e.getStackTrace().toString());
 		}
 	}
 
